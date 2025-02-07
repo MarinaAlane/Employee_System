@@ -1,14 +1,17 @@
+package empresa;
+
 import java.time.LocalDate;
 import java.time.Period;
 
 public class Pessoa {
-  public String nome;
-  public LocalDate dataDeNascimento;
-  public int idade;
+  private String nome;
+  private LocalDate dataDeNascimento;
+  private int idade;
 
   public Pessoa(String nome, LocalDate dataDeNascimento) {
     this.nome = nome;
     this.dataDeNascimento = dataDeNascimento;
+    this.idade = calcularIdade();
   }
 
   public String getNome() {
@@ -28,14 +31,21 @@ public class Pessoa {
   }
 
   public int getIdade() {
-    LocalDate dataAtual = LocalDate.now();
-    Period periodo = Period.between(dataDeNascimento, dataAtual);
-    idade = periodo.getYears();
-
     return idade;
   }
 
   public void setIdade(int idade) {
     this.idade = idade;
+  }
+
+  private int calcularIdade() {
+    LocalDate dataAtual = LocalDate.now();
+    Period periodo = Period.between(dataDeNascimento, dataAtual);
+    return periodo.getYears();
+  }
+
+  @Override
+  public String toString() {
+    return "Pessoa [nome=" + nome + ", idade=" + idade + ", dataDeNascimento=" + dataDeNascimento + "]";
   }
 }
