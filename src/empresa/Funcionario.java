@@ -5,9 +5,11 @@ import java.math.BigDecimal;
 public class Funcionario extends Pessoa {
   private BigDecimal salario;
   private String funcao;
+  private Pessoa pessoa;
 
   public Funcionario(Pessoa pessoa, BigDecimal salario, String funcao) {
-    super(pessoa.getNome(), pessoa.getDataDeNascimento()); // Chama o construtor de Pessoa
+    super(pessoa.getNome(), pessoa.getDataDeNascimento());
+    this.pessoa = pessoa;
     this.salario = salario;
     this.funcao = funcao;
   }
@@ -26,6 +28,10 @@ public class Funcionario extends Pessoa {
 
   public void setFuncao(String funcao) {
     this.funcao = funcao;
+  }
+
+  public Pessoa getPessoa() {
+    return pessoa;
   }
 
   @Override

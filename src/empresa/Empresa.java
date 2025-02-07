@@ -53,5 +53,12 @@ public class Empresa {
     for (Funcionario funcionario : funcionarios) {
       System.out.println(funcionario);
     }
+
+    funcionarios.removeIf(funcionario -> funcionario.getPessoa().getNome().equals("João"));
+
+    System.out.println("Lista de Funcionários após a exclusão:");
+    for (Funcionario funcionario : funcionarios) {
+      System.out.println(funcionario);
+    }
   }
 }
