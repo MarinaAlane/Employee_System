@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -108,6 +109,40 @@ public class Empresa {
         ", Idade: " + idade + " anos");
   }
 
+  private static List<String> listarFuncionariosOrdemAlfabetica() {
+    List<String> nomes = new ArrayList<>();
+    for (Funcionario funcionario : funcionarios) {
+      nomes.add(funcionario.getPessoa().getNome());
+    }
+    Collections.sort(nomes);
+
+    System.out.println("Lista de funcionários em ordem alfabética:");
+    for (String nome : nomes) {
+      System.out.println(nome);
+    }
+    return nomes;
+  }
+
+  private static BigDecimal somarSalarios() {
+    BigDecimal totalSalarios = BigDecimal.ZERO;
+    for (Funcionario funcionario : funcionarios) {
+      totalSalarios = totalSalarios.add(funcionario.getSalario());
+    }
+
+    System.out.println("Valor total dos salários dos funcionários: R$ "
+        + totalSalarios.setScale(2, RoundingMode.HALF_EVEN).toString().replace(".", ","));
+    return totalSalarios;
+  }
+
+  private static void imprimirSalariosMinimos() {
+    BigDecimal salarioMinimo = new BigDecimal("1212.00");
+    System.out.println("Quantidade de salários mínimos que cada funcionário ganha:");
+    for (Funcionario funcionario : funcionarios) {
+      BigDecimal quantidadeSalariosMinimos = funcionario.getSalario().divide(salarioMinimo, 2, RoundingMode.HALF_EVEN);
+      System.out.println(funcionario.getPessoa().getNome() + ": " + quantidadeSalariosMinimos + " salários mínimos");
+    }
+  }
+
   public static void main(String[] args) {
 
     addPessoa("Maria", LocalDate.of(2000, 10, 18));
@@ -161,8 +196,15 @@ public class Empresa {
     agruparFuncionario();
 
     filtrarPorMesAniversario(10);
+
     filtrarPorMesAniversario(12);
 
     funcionarioMaisVelho();
+
+    listarFuncionariosOrdemAlfabetica();
+
+    somarSalarios();
+
+    imprimirSalariosMinimos();
   }
 }
