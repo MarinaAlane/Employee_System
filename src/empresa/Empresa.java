@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Empresa {
+  private static List<Pessoa> pessoas = new ArrayList<>();
+
+  private static List<Funcionario> funcionarios = new ArrayList<>();
 
   private static void addPessoa(String nome, LocalDate dataDeNascimento) {
     Pessoa pessoa = new Pessoa(nome, dataDeNascimento);
@@ -22,8 +25,6 @@ public class Empresa {
       funcionarios.add(funcionario);
     }
   }
-
-  private static List<Pessoa> pessoas = new ArrayList<>();
 
   private static void excluiFuncionario(String nome) {
     funcionarios.removeIf(funcionario -> funcionario.getPessoa().getNome().equals(nome));
@@ -44,7 +45,18 @@ public class Empresa {
         salario, funcionario.getFuncao()));
   }
 
-  private static List<Funcionario> funcionarios = new ArrayList<>();
+  private static void aumentoSalario(String nome, BigDecimal aumento) {
+    for (Funcionario funcionario : funcionarios) {
+      if (funcionario.getPessoa().getNome().equals(nome)) {
+        BigDecimal novoSalario = funcionario.getSalario().add(aumento);
+        funcionario.setSalario(novoSalario);
+        String salarioFormatado = "R$ " + novoSalario.setScale(2, RoundingMode.HALF_EVEN).toString().replace(".", ",");
+
+        System.out.println("Salário atualizado para " + nome + ": " + salarioFormatado);
+        break;
+      }
+    }
+  }
 
   public static void main(String[] args) {
 
@@ -88,6 +100,11 @@ public class Empresa {
     System.out.println("Lista de funcionários formatada:");
     for (Funcionario funcionario : funcionarios) {
       formatarFuncionario(funcionario);
+    }
+
+    System.out.println("Aumento de salário de 10% para todos os funcionários:");
+    for (Funcionario funcionario : funcionarios) {
+      aumentoSalario(funcionario.getPessoa().getNome(), funcionario.getSalario().multiply(new BigDecimal("0.1")));
     }
   }
 }
