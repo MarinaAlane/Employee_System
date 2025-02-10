@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Empresa {
   private static List<Pessoa> pessoas = new ArrayList<>();
@@ -15,8 +17,6 @@ public class Empresa {
   private static void addPessoa(String nome, LocalDate dataDeNascimento) {
     Pessoa pessoa = new Pessoa(nome, dataDeNascimento);
     pessoas.add(pessoa);
-
-    System.out.println("Pessoa adicionada: " + pessoa);
   }
 
   private static void addFuncionario(String nome, BigDecimal salario, String funcao) {
@@ -56,6 +56,56 @@ public class Empresa {
         break;
       }
     }
+  }
+
+  private static Map<String, List<String>> agruparFuncionario() {
+    Map<String, List<String>> mapFuncionarios = new HashMap<>();
+    for (Funcionario funcionario : funcionarios) {
+      String funcao = funcionario.getFuncao();
+      if (!mapFuncionarios.containsKey(funcao)) {
+        mapFuncionarios.put(funcao, new ArrayList<>());
+      }
+      mapFuncionarios.get(funcao).add(funcionario.getPessoa().getNome());
+    }
+    System.out.println("Lista de funcionários agrupados por função:");
+    System.out.println(mapFuncionarios);
+
+    return mapFuncionarios;
+  }
+
+  private static List<String> filtrarPorMesAniversario(int mes) {
+    List<String> nomesFiltrados = new ArrayList<>();
+    for (Funcionario funcionario : funcionarios) {
+      if (funcionario.getPessoa().getDataDeNascimento().getMonthValue() == mes) {
+        nomesFiltrados.add(funcionario.getPessoa().getNome());
+      }
+    }
+
+    if (nomesFiltrados.isEmpty()) {
+      System.out.println("Nenhum funcionário com aniversário no mês " + mes + ".");
+    } else {
+      System.out.println("Funcionários com aniversário no mês " + mes + ":");
+      for (String nome : nomesFiltrados) {
+        System.out.println(nome);
+      }
+    }
+
+    return nomesFiltrados;
+  }
+
+  private static void funcionarioMaisVelho() {
+    Funcionario maisVelho = funcionarios.get(0);
+    for (Funcionario funcionario : funcionarios) {
+      if (funcionario.getPessoa().getIdade() > maisVelho.getPessoa().getIdade()) {
+        maisVelho = funcionario;
+      }
+    }
+
+    Pessoa pessoaMaisVelha = maisVelho.getPessoa();
+    int idade = LocalDate.now().getYear() -
+        pessoaMaisVelha.getDataDeNascimento().getYear();
+    System.out.println("Funcionário mais velho: " + pessoaMaisVelha.getNome() +
+        ", Idade: " + idade + " anos");
   }
 
   public static void main(String[] args) {
@@ -104,7 +154,15 @@ public class Empresa {
 
     System.out.println("Aumento de salário de 10% para todos os funcionários:");
     for (Funcionario funcionario : funcionarios) {
-      aumentoSalario(funcionario.getPessoa().getNome(), funcionario.getSalario().multiply(new BigDecimal("0.1")));
+      aumentoSalario(funcionario.getPessoa().getNome(),
+          funcionario.getSalario().multiply(new BigDecimal("0.1")));
     }
+
+    agruparFuncionario();
+
+    filtrarPorMesAniversario(10);
+    filtrarPorMesAniversario(12);
+
+    funcionarioMaisVelho();
   }
 }
